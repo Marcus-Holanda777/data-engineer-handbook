@@ -2,13 +2,12 @@
 set -e
 
 # Import the data dump
-pg_restore \
-    -v \
-    --no-owner \
-    --no-privileges \
-    -U $POSTGRES_USER \
-    -d $POSTGRES_DB \
-    /docker-entrypoint-initdb.d/data.dump
+psql \
+    -v ON_ERROR_STOP=1 \
+    --username $POSTGRES_USER \
+    --dbname $POSTGRES_DB \
+    < /docker-entrypoint-initdb.d/data.dump
+
 
 # Check if the path is a directory using the -d flag and
 #  there are SQL files in the directory using the -f command
