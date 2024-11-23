@@ -2,17 +2,19 @@
 set -e
 
 # Import the data dump
-psql \
-    -v ON_ERROR_STOP=1 \
-    --username $POSTGRES_USER \
-    --dbname $POSTGRES_DB \
-    < /docker-entrypoint-initdb.d/data.dump
-
+pg_restore \
+    -v \
+    --no-owner \
+    --no-privileges \
+    -U $POSTGRES_USER \
+    -d $POSTGRES_DB \
+    /docker-entrypoint-initdb.d/data.dump
 
 # Check if the path is a directory using the -d flag and
 #  there are SQL files in the directory using the -f command
 #   (the [] brackets are used for conditional expressions)
 if [ -d /docker-entrypoint-initdb.d/homework ]; then
+
   echo "[SUCCESS]: Located homework directory"
   # Run any additional initialization scripts
     for f in /docker-entrypoint-initdb.d/homework/*.sql; do
